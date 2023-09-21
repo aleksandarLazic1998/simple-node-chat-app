@@ -2,22 +2,31 @@ const net = require("net");
 const { PORT, HOST } = require("./shared/constants");
 const formatBufferToString = require("./shared/formatBufferToString");
 const askForMessage = require("./shared/askForMessage");
+const clearLineFunc = require("./shared/clearLineFunc");
+const moveTheCursorUp = require("./shared/moveTheCursorUp");
 
 const clientSocket = net.createConnection({ port: PORT, host: HOST });
 
-clientSocket.on("connect", () => {
-	askForMessage(clientSocket);
-});
+let userId = "Unknown";
 
-clientSocket.on("data", (data) => {
+clientSocket.on("data", async (data) => {
 	const formattedData = formatBufferToString(data);
 
-	console.log(formattedData, "------Data received on all clients.");
+	console.log();
+	// move the cursor one line up
+	await moveTheCursorUp(0, -1);
+	// clear that line that cursor just moved into
+	await clearLineFunc(0);
 
-	askForMessage(clientSocket);
+	if (data.toString("utf-8").substring(0, 2) === "id") {
+		id = data.toString("utf-8").substring(3);
+
+		console.log(`Your id is ${id}!\n`);
+	} else {
+		console.log(data.toString("utf-8"));
+	}
 });
 
 clientSocket.on("end", () => {
-	console.log("Connection ended.");
-	clientSocket.write("Socket x left the chat.");
+	clientSocket.write(`User ${userId} left the chat.`);
 });
