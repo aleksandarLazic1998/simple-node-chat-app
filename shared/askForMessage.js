@@ -1,3 +1,7 @@
+const clearLineFunc = require("./clearLineFunc");
+const { readLineInterface } = require("./constants");
+const moveTheCursorUp = require("./moveTheCursorUp");
+
 /**
  * Asynchronously prompts the user to enter a message and writes it to a provided client socket.
  *
@@ -19,17 +23,15 @@
  *     });
  * });
  */
+
 async function askForMessage(clientSocket) {
-	try {
-		const readLineMessage = await readLineInterface.question(
-			"Enter the message > "
-		);
-		clientSocket.write(readLineMessage);
-	} catch (error) {
-		console.error(
-			`Error: ${error.message}. Error with entering a message from socket x failed.`
-		);
-	}
+	const readLineMessage = await readLineInterface.question(
+		"Enter the message > "
+	);
+
+	clientSocket.write(readLineMessage);
+	await moveTheCursorUp(0, -1);
+	await clearLineFunc(0);
 }
 
 module.exports = askForMessage;
