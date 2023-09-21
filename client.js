@@ -12,7 +12,9 @@ clientSocket.on("connect", () => {
 clientSocket.on("data", (data) => {
 	const formattedData = formatBufferToString(data);
 
-	console.log(formattedData, "Data received");
+	console.log(formattedData, "------Data received on all clients.");
+
+	askForMessage(clientSocket);
 });
 
 clientSocket.on("end", () => {
