@@ -1,5 +1,6 @@
 const clearLineFunc = require("./clearLineFunc");
 const { readLineInterface } = require("./constants");
+const formatBufferToString = require("./formatBufferToString");
 const moveTheCursorUp = require("./moveTheCursorUp");
 
 /**
@@ -24,7 +25,7 @@ const moveTheCursorUp = require("./moveTheCursorUp");
  * });
  */
 
-async function askForMessage(clientSocket) {
+async function askForMessage(clientSocket, formattedData) {
 	const readLineMessage = await readLineInterface.question(
 		"Enter the message > "
 	);

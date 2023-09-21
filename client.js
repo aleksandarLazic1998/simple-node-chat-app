@@ -5,19 +5,26 @@ const askForMessage = require("./shared/askForMessage");
 
 const clientSocket = net.createConnection({ port: PORT, host: HOST });
 
-clientSocket.on("connect", () => {
+let userId = "Unknown";
+
+clientSocket.on("connection", (data) => {
 	askForMessage(clientSocket);
 });
 
 clientSocket.on("data", (data) => {
 	const formattedData = formatBufferToString(data);
 
-	console.log(formattedData, "------Data received on all clients.");
+	if (formattedData.includes("left the chat.")) {
+		userId = formattedData.substring(6, formattedData.indexOf(","));
+	}
+
+	if (formattedData.includes("joined the chat.")) {
+		console.log(`${formattedData}`);
+	}
 
 	askForMessage(clientSocket);
 });
 
 clientSocket.on("end", () => {
-	console.log("Connection ended.");
-	clientSocket.write("Socket x left the chat.");
+	clientSocket.write(`User ${userId} left the chat.`);
 });
