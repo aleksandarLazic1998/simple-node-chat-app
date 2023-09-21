@@ -16,13 +16,19 @@ clientSocket.on("data", (data) => {
 
 	if (formattedData.includes("left the chat.")) {
 		userId = formattedData.substring(6, formattedData.indexOf(","));
+	} else {
+		console.log(formattedData);
+
+		askForMessage(clientSocket);
 	}
 
 	if (formattedData.includes("joined the chat.")) {
 		console.log(`${formattedData}`);
-	}
+	} else {
+		console.log(formattedData);
 
-	askForMessage(clientSocket);
+		askForMessage(clientSocket);
+	}
 });
 
 clientSocket.on("end", () => {
