@@ -17,9 +17,13 @@ server.on("connection", (socket) => {
 
 	socket.on("data", (data) => {
 		const formattedData = formatBufferToString(data);
+		const id = formattedData.substring(0, formattedData.indexOf("-"));
+		const message = formattedData.substring(
+			formattedData.indexOf("-message-") + 9
+		);
 
 		listOfClientSockets.forEach(({ id, socket }) => {
-			socket.write(`${id}-message-${formattedData}`);
+			socket.write(`> User ${id}: ${message}`);
 		});
 	});
 
