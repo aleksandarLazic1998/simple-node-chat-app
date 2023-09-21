@@ -1,13 +1,20 @@
 const net = require("net");
 const { PORT, HOST } = require("./shared/constants");
+const formatBufferToString = require("./shared/formatBufferToString");
 
 const server = net.createServer();
 
+const listOfClientSockets = [];
+
 server.on("connection", (socket) => {
-	console.log("Connection Created.\n");
+	listOfClientSockets.push(socket);
 
 	socket.on("data", (data) => {
-		console.log(data.toString("utf-8"));
+		const formattedData = formatBufferToString(data);
+
+		listOfClientSockets.forEach((clientSocket) => {
+			clientSocket.write(formattedData);
+		});
 	});
 });
 
